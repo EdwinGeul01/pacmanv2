@@ -36,47 +36,53 @@ void juego::draw()
   while (ventana->isOpen())
   {
     ventana->clear(sf::Color::Black);
-
-    ventana->draw(*s_pacman);
-    ventana->draw(*l_wall);
-    ventana->draw(*r_wall);
-    ventana->draw(*t_wall);
-    ventana->draw(*d_wall);
-
-    ventana->draw(*bloque_si);
-    ventana->draw(*bloque_sm);
-    ventana->draw(*bloque_sd);
-
-    ventana->draw(*bloque_mi);
-    ventana->draw(*bloque_mm);
-    ventana->draw(*bloque_md);
-
-    ventana->draw(*bloque_ii);
-    ventana->draw(*bloque_im);
-    ventana->draw(*bloque_id);
-
-    //comida
-    for (int i = 0; i < 96; i++)
+    if (final != true)
     {
-      ventana->draw(*comidaSprites[i]);
-    }
+      ventana->draw(*s_pacman);
+      ventana->draw(*l_wall);
+      ventana->draw(*r_wall);
+      ventana->draw(*t_wall);
+      ventana->draw(*d_wall);
 
-    //fantasma
-    for (int i = 0; i < 5; i++)
+      ventana->draw(*bloque_si);
+      ventana->draw(*bloque_sm);
+      ventana->draw(*bloque_sd);
+
+      ventana->draw(*bloque_mi);
+      ventana->draw(*bloque_mm);
+      ventana->draw(*bloque_md);
+
+      ventana->draw(*bloque_ii);
+      ventana->draw(*bloque_im);
+      ventana->draw(*bloque_id);
+      ventana->draw(*t_cronometro);
+
+      //comida
+      for (int i = 0; i < 96; i++)
+      {
+        ventana->draw(*comidaSprites[i]);
+      }
+
+      //fantasma
+      for (int i = 0; i < 5; i++)
+      {
+        ventana->draw(*fantasmaSprites[i]);
+      }
+
+      //texto
+      ventana->draw(*s_lives);
+      ventana->draw(*Score);
+      ventana->draw(*ScoreT);
+      //vidas
+      for (int i = 0; i < 3; i++)
+      {
+        ventana->draw(*s_vida[i]);
+      }
+    }
+    else
     {
-      ventana->draw(*fantasmaSprites[i]);
+      ventana->draw(*Ending);
     }
-
-    //texto
-    ventana->draw(*s_lives);
-    ventana->draw(*Score);
-    ventana->draw(*ScoreT);
-    //vidas
-    for (int i = 0; i < 3; i++)
-    {
-      ventana->draw(*s_vida[i]);
-    }
-
     //
     ventana->display();
 
@@ -138,7 +144,7 @@ void juego::Eventos_Teclado()
               ContadorScore++;
               if (ContadorScore == 96)
               {
-                ventana->close();
+                final = true;
               }
             }
           }
@@ -190,7 +196,7 @@ void juego::Eventos_Teclado()
               ContadorScore++;
               if (ContadorScore == 96)
               {
-                ventana->close();
+                final = true;
               }
             }
           }
@@ -242,7 +248,7 @@ void juego::Eventos_Teclado()
               ContadorScore++;
               if (ContadorScore == 96)
               {
-                ventana->close();
+                final = true;
               }
             }
           }
@@ -294,7 +300,7 @@ void juego::Eventos_Teclado()
               ScoreT->setString(ss.str());
               if (ContadorScore == 96)
               {
-                ventana->close();
+                final = true;
               }
             }
           }
@@ -347,7 +353,10 @@ void juego::cargarTexturas()
   ScoreT = new sf::Text();
   FontS = new sf::Font();
   ScoreF = new sf::Font();
-
+  Ending = new sf::Text();
+  f_cronometro = new sf::Font();
+  t_cronometro = new sf::Text();
+  //tiempoF = tiempoT.asSeconds; //-----------------------el tiempo
   for (int i = 0; i < 3; i++)
   {
     s_vida[i] = new sf::Sprite();
@@ -385,14 +394,25 @@ void juego::cargarTexturas()
   //texto
   t_lives->loadFromFile("../recursos/lives.png");
   s_lives->setTexture(*t_lives);
+
   FontS->loadFromFile("../recursos/Square.ttf");
   ScoreF->loadFromFile("../recursos/Numero.ttf");
-  //vidas
-  t_vida->loadFromFile("../recursos/heart.png");
+  f_cronometro->loadFromFile("../recursos/Square.ttf");
+  //vidas//cronometro
+  t_vida->loadFromFile("../recursos/heart.png"); //cronometro
   for (int i = 0; i < 3; i++)
   {
     s_vida[i] = new sf::Sprite(*t_vida);
   }
+
+  //cronometro
+  f_cronometro->loadFromFile("../recursos/Numero.ttf");
+  t_cronometro->setFont(*f_cronometro);
+  t_cronometro->setPosition(610, 150);
+  t_cronometro->setString("0");
+  t_cronometro->setFillColor(sf::Color::White);
+  t_cronometro->setCharacterSize(20);
+  //cronometro xD
 
   //texturas del mapa
   t_cuadro->loadFromFile("../recursos/cuadro.png");
@@ -412,6 +432,11 @@ void juego::cargarTexturas()
   s_lives->setTexture(*t_lives);
 
   //Texto
+  Ending->setFont(*FontS);
+  Ending->setString("GANASTE");
+  Ending->setPosition(250, 200);
+  Ending->setFillColor(sf::Color::White);
+  Ending->setCharacterSize(80);
   Score->setFont(*FontS);
   ScoreT->setFont(*ScoreF);
   Score->setPosition(610, 100); //primero izquierda derecha, segundo arriba y abajo
