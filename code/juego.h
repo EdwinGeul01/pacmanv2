@@ -95,4 +95,8 @@ public:
     //Final
     sf::Text *Ending;
     bool final = false;
+
+    //Perdiste
+    sf::Text *Par;
+    bool perdi = false;
 };

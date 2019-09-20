@@ -36,7 +36,7 @@ void juego::draw()
   while (ventana->isOpen())
   {
     ventana->clear(sf::Color::Black);
-    if (final != true)
+    if (final != true && perdi != true)
     {
       ventana->draw(*s_pacman);
       ventana->draw(*l_wall);
@@ -79,9 +79,13 @@ void juego::draw()
         ventana->draw(*s_vida[i]);
       }
     }
-    else
+    else if (final == true)
     {
       ventana->draw(*Ending);
+    }
+    else if (perdi == true)
+    {
+      ventana->draw(*Par);
     }
     //
     ventana->display();
@@ -356,6 +360,7 @@ void juego::cargarTexturas()
   Ending = new sf::Text();
   f_cronometro = new sf::Font();
   t_cronometro = new sf::Text();
+  Par = new sf::Text();
   //tiempoF = tiempoT.asSeconds; //-----------------------el tiempo
   for (int i = 0; i < 3; i++)
   {
@@ -432,6 +437,11 @@ void juego::cargarTexturas()
   s_lives->setTexture(*t_lives);
 
   //Texto
+  Par->setFont(*FontS);
+  Par->setString("PERDISTE");
+  Par->setPosition(250, 200);
+  Par->setFillColor(sf::Color::White);
+  Par->setCharacterSize(80);
   Ending->setFont(*FontS);
   Ending->setString("GANASTE");
   Ending->setPosition(250, 200);
@@ -699,7 +709,7 @@ void juego::ColisionFantasma()
         s_vida[vidas]->setColor(sf::Color::Transparent);
         if (vidas == 0)
         {
-          ventana->close();
+          perdi = true;
         }
       }
     }
