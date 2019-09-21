@@ -1,8 +1,10 @@
 #include "juego.h"
+#include "menu.h"
 #include <thread>
 #include <X11/Xlib.h>
 #include <math.h>
 #include <sstream>
+#include <fstream>
 
 juego::juego()
 {
@@ -17,16 +19,15 @@ juego::juego()
 
 void juego::gameloops()
 {
-
   XInitThreads();
   std::thread draw(&juego::draw, this);
   std::thread Eventos_Teclado(&juego::Eventos_Teclado, this);
   std::thread mov_fantasmas(&juego::movfantasmas, this);
   std::thread colision_fantasma(&juego::ColisionFantasma, this);
-
+  std::thread Cronometro(&juego::CronometroF, this);
   mov_fantasmas.join();
   draw.join();
-
+   Cronometro.join();
   Eventos_Teclado.join();
   colision_fantasma.join();
 }
@@ -101,8 +102,22 @@ void juego::Eventos_Teclado()
 
     sf::Event event;
 
+
     if (ventana->pollEvent(event) || movimiento != 0)
     {
+
+           if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space) &&  perdi)
+      {
+        ventana->close();
+        menu main;
+      }
+
+           if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space) &&  final)
+        {
+        ventana->close();
+        menu main;
+      }
+
       if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
       {
         ventana->close();
@@ -145,8 +160,8 @@ void juego::Eventos_Teclado()
             {
 
               comidaSprites[i]->setColor(sf::Color::Transparent);
-              ContadorScore++;
-              if (ContadorScore == 96)
+              ContadorScore=ContadorScore+10;
+              if (ContadorScore == 960)
               {
                 final = true;
               }
@@ -197,9 +212,10 @@ void juego::Eventos_Teclado()
             {
 
               comidaSprites[i]->setColor(sf::Color::Transparent);
-              ContadorScore++;
-              if (ContadorScore == 96)
+              ContadorScore=ContadorScore+10;
+              if (ContadorScore == 960)
               {
+                
                 final = true;
               }
             }
@@ -249,8 +265,8 @@ void juego::Eventos_Teclado()
             {
 
               comidaSprites[i]->setColor(sf::Color::Transparent);
-              ContadorScore++;
-              if (ContadorScore == 96)
+              ContadorScore=ContadorScore+10;
+              if (ContadorScore == 960)
               {
                 final = true;
               }
@@ -298,11 +314,11 @@ void juego::Eventos_Teclado()
             {
 
               comidaSprites[i]->setColor(sf::Color::Transparent);
-              ContadorScore++;
+              ContadorScore=ContadorScore+10;
               std::stringstream ss;
               ss << ContadorScore;
               ScoreT->setString(ss.str());
-              if (ContadorScore == 96)
+              if (ContadorScore == 960)
               {
                 final = true;
               }
@@ -618,6 +634,7 @@ void juego::cargarTexturas()
   s_vida[2]->setPosition(700, 60);
 }
 
+
 void juego::movfantasmas()
 {
   long mover = (rand() % 5) + 1;
@@ -709,9 +726,28 @@ void juego::ColisionFantasma()
         s_vida[vidas]->setColor(sf::Color::Transparent);
         if (vidas == 0)
         {
+          GuardarDatos();
           perdi = true;
         }
       }
     }
   }
+}
+
+
+void juego::CronometroF(){
+ for (int i = 0; i < 10000; i++)
+ {
+  CronometroS=std::to_string(i);
+  t_cronometro->setString(CronometroS);
+   sf::sleep(sf::Time(sf::milliseconds(1000)));
+ }
+}
+
+void juego::GuardarDatos(){
+std::ofstream ArchivoE("historial.dat", std::ios::out | std::ios::app);
+if(ArchivoE){
+ArchivoE<<CronometroS<<"\t"<<ContadorScore<<"\n";
+ArchivoE.close();
+}
 }
