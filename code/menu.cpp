@@ -2,23 +2,22 @@
 #include <iostream>
 #include <thread>
 #include "juego.h"
+#include "Records.h"
 
 menu::menu(){
     
     menu::ventana_Menu = new sf::RenderWindow(sf::VideoMode(400,600),"Menu");
     ventana_Menu->setFramerateLimit(60);
-    
     ventana_Menu->clear();
     cargar_sprite();
     ventana_Menu->draw(*background_sprite);
     ventana_Menu->draw(*play_button_sprite);
     ventana_Menu->draw(*Inst_button_sprite);
+    ventana_Menu->draw(*records_button_sprite);
     ventana_Menu->display();
 
     std::thread h_eventos(&menu::Eventos,this);
     h_eventos.join();
-
- 
 
 }
 
@@ -32,10 +31,11 @@ void menu::Eventos(){
         
         if (ventana_Menu->pollEvent(event))
         {
-            if ((event.type == sf::Event::KeyPressed) &&(event.key.code == sf::Keyboard::Space) )
+
+              if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
             {
                 ventana_Menu->close();
-            }
+             }
 
 
             if ((event.type == sf::Event::KeyPressed) &&(event.key.code == sf::Keyboard::R) )
@@ -49,18 +49,19 @@ void menu::Eventos(){
                 if (play_button_sprite->getGlobalBounds().contains(mposition))
                 {
                     ventana_Menu->close();
-                     juego game;
-                    
-                   
-                    
-                }
-                
+                     juego game; 
+                }   
+            }
+
+            if((event.type==sf::Event::MouseButtonPressed&& (event.mouseButton.button==sf::Mouse::Left))){
+            sf::Vector2f mposition(sf::Mouse::getPosition(*ventana_Menu));
+            if(records_button_sprite->getGlobalBounds().contains(mposition)){
+                ventana_Menu->close();
+                Records records;
+            }
             }
             
-            
         }
-        
-        
 
     }
 
@@ -73,6 +74,8 @@ void menu::cargar_sprite(){
     background_sprite = new sf::Sprite();
     play_button_texture = new sf::Texture();
     play_button_sprite = new sf::Sprite();
+    records_button_texture = new sf::Texture();
+    records_button_sprite = new sf::Sprite();
     Inst_button_texture = new sf::Texture();
     Inst_button_sprite = new sf::Sprite();
 
@@ -82,20 +85,20 @@ void menu::cargar_sprite(){
     play_button_texture->loadFromFile("../recursos/button.png");
     play_button_sprite->setTexture(*play_button_texture);
     
+    records_button_texture->loadFromFile("../recursos/Records.png");
+    records_button_sprite->setTexture(*records_button_texture);
+
     Inst_button_texture->loadFromFile("../recursos/int.jpeg");
     Inst_button_sprite->setTexture(*Inst_button_texture);
 
     play_button_sprite->setScale(1,1);
+    records_button_sprite->setScale(1,1);
     background_sprite->setScale(1,1);
     Inst_button_sprite->setScale(0.15,0.15);
-    
-
-    
 
     
     Inst_button_sprite->setPosition(290,510);
     play_button_sprite->setPosition(sf::Vector2f(120,200));
-
+    records_button_sprite->setPosition(sf::Vector2f(120,300));
 }
-
 
