@@ -21,6 +21,14 @@ private:
     sf::Texture *play_button_texture;
     sf::Sprite  *play_button_sprite ;
 
+    sf::Texture *records_button_texture;
+    sf::Sprite  *records_button_sprite ;
+
      sf::Texture *Inst_button_texture;
     sf::Sprite  *Inst_button_sprite ;
 };
+
+
+
+
+
