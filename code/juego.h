@@ -1,7 +1,6 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <iostream>
 #include <string>
 
 class juego
@@ -16,6 +15,8 @@ public:
     void Eventos_Teclado();
     void movfantasmas();
     void ColisionFantasma();
+    void CronometroF();
+    void GuardarDatos();
 
     //Comida no power up
     sf::Texture *comidat;
@@ -40,9 +41,6 @@ public:
     sf::Font *f_cronometro;
     int Cronometro;
     std::string CronometroS;
-    //Cronometro 2 xD
-    sf::Time tiempoT;
-    float tiempoF;
 
     // movimiento  = 1 -- derecha
     // movimiento  = 2 int Cronometro;int Cronometro;-- izquierda
