@@ -11,7 +11,7 @@ Para compilar el proyecto:
 Poner Esos Dos Comandos En La Carpeta Build
 
 Integrantes:
-Enrique Cruz
-Edwin Geul
-Mario Hernande
-Bradley Sanchez
+Enrique Cruz,
+Edwin Geul,
+Mario Hernande,
+Bradley Sanchez.
